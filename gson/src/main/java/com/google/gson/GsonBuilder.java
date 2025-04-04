@@ -34,10 +34,8 @@ import com.google.gson.annotations.Since;
 import com.google.gson.annotations.Until;
 import com.google.gson.internal.Excluder;
 import com.google.gson.internal.GsonPreconditions;
-import com.google.gson.internal.bind.DefaultDateTypeAdapter;
 import com.google.gson.internal.bind.TreeTypeAdapter;
 import com.google.gson.internal.bind.TypeAdapters;
-import com.google.gson.internal.sql.SqlTypesSupport;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -115,12 +113,16 @@ public final class GsonBuilder {
   private ToNumberStrategy numberToNumberStrategy = DEFAULT_NUMBER_TO_NUMBER_STRATEGY;
   private final ArrayDeque<ReflectionAccessFilter> reflectionFilters = new ArrayDeque<>();
 
+  private DateFormattingStrategy dateFormattingStrategy;
+
   /**
    * Creates a GsonBuilder instance that can be used to build Gson with various configuration
    * settings. GsonBuilder follows the builder pattern, and it is typically used by first invoking
    * various configuration methods to set desired options, and finally calling {@link #create()}.
    */
-  public GsonBuilder() {}
+  public GsonBuilder() {
+    this.dateFormattingStrategy = null;
+  }
 
   /**
    * Constructs a GsonBuilder instance from a Gson instance. The newly constructed GsonBuilder has
@@ -606,11 +608,15 @@ public final class GsonBuilder {
       try {
         new SimpleDateFormat(pattern);
       } catch (IllegalArgumentException e) {
-        // Throw exception if it is an invalid date format
         throw new IllegalArgumentException("The date pattern '" + pattern + "' is not valid", e);
       }
+      this.dateFormattingStrategy = new PatternBasedDateStrategy(pattern);
+    } else {
+      this.dateFormattingStrategy = null;
     }
-    this.datePattern = pattern;
+    this.datePattern = null;
+    this.dateStyle = DateFormat.DEFAULT;
+    this.timeStyle = DateFormat.DEFAULT;
     return this;
   }
 
@@ -637,8 +643,11 @@ public final class GsonBuilder {
   @Deprecated
   @CanIgnoreReturnValue
   public GsonBuilder setDateFormat(int dateStyle) {
-    this.dateStyle = checkDateFormatStyle(dateStyle);
+    this.dateFormattingStrategy =
+        new StyleBasedDateStrategy(checkDateFormatStyle(dateStyle), DateFormat.DEFAULT);
     this.datePattern = null;
+    this.dateStyle = DateFormat.DEFAULT;
+    this.timeStyle = DateFormat.DEFAULT;
     return this;
   }
 
@@ -660,16 +669,18 @@ public final class GsonBuilder {
    */
   @CanIgnoreReturnValue
   public GsonBuilder setDateFormat(int dateStyle, int timeStyle) {
-    this.dateStyle = checkDateFormatStyle(dateStyle);
-    this.timeStyle = checkDateFormatStyle(timeStyle);
+    this.dateFormattingStrategy =
+        new StyleBasedDateStrategy(
+            checkDateFormatStyle(dateStyle), checkDateFormatStyle(timeStyle));
     this.datePattern = null;
+    this.dateStyle = DateFormat.DEFAULT;
+    this.timeStyle = DateFormat.DEFAULT;
     return this;
   }
 
   private static int checkDateFormatStyle(int style) {
-    // Valid DateFormat styles are: 0, 1, 2, 3 (FULL, LONG, MEDIUM, SHORT)
-    if (style < 0 || style > 3) {
-      throw new IllegalArgumentException("Invalid style: " + style);
+    if (style < DateFormat.FULL || style > DateFormat.SHORT) {
+      throw new IllegalArgumentException("Illegal date format style: " + style);
     }
     return style;
   }
@@ -884,7 +895,7 @@ public final class GsonBuilder {
     Collections.reverse(hierarchyFactories);
     factories.addAll(hierarchyFactories);
 
-    addTypeAdaptersForDate(datePattern, dateStyle, timeStyle, factories);
+    addTypeAdaptersForDate(datePattern, dateStyle, timeStyle, dateFormattingStrategy, factories);
 
     return new Gson(
         excluder,
@@ -910,39 +921,15 @@ public final class GsonBuilder {
         new ArrayList<>(reflectionFilters));
   }
 
-  private static void addTypeAdaptersForDate(
-      String datePattern, int dateStyle, int timeStyle, List<TypeAdapterFactory> factories) {
-    TypeAdapterFactory dateAdapterFactory;
-    boolean sqlTypesSupported = SqlTypesSupport.SUPPORTS_SQL_TYPES;
-    TypeAdapterFactory sqlTimestampAdapterFactory = null;
-    TypeAdapterFactory sqlDateAdapterFactory = null;
-
-    if (datePattern != null && !datePattern.trim().isEmpty()) {
-      dateAdapterFactory = DefaultDateTypeAdapter.DateType.DATE.createAdapterFactory(datePattern);
-
-      if (sqlTypesSupported) {
-        sqlTimestampAdapterFactory =
-            SqlTypesSupport.TIMESTAMP_DATE_TYPE.createAdapterFactory(datePattern);
-        sqlDateAdapterFactory = SqlTypesSupport.DATE_DATE_TYPE.createAdapterFactory(datePattern);
-      }
-    } else if (dateStyle != DateFormat.DEFAULT || timeStyle != DateFormat.DEFAULT) {
-      dateAdapterFactory =
-          DefaultDateTypeAdapter.DateType.DATE.createAdapterFactory(dateStyle, timeStyle);
-
-      if (sqlTypesSupported) {
-        sqlTimestampAdapterFactory =
-            SqlTypesSupport.TIMESTAMP_DATE_TYPE.createAdapterFactory(dateStyle, timeStyle);
-        sqlDateAdapterFactory =
-            SqlTypesSupport.DATE_DATE_TYPE.createAdapterFactory(dateStyle, timeStyle);
-      }
-    } else {
+  private static void addTypeAdaptersForDate(DateFormattingStrategy strategy, List<TypeAdapterFactory> factories) {
+    if (strategy != null) {
+      factories.add(strategy.createAdapterFactory(DateTypeAdapter.DEFAULT));
+      try {
+        Class.forName("java.sql.Date");
+        factories.add(strategy.createAdapterFactory(DateTypeAdapter.SQL_TIMESTAMP));
+        factories.add(strategy.createAdapterFactory(DateTypeAdapter.SQL_DATE));
+      } catch (ClassNotFoundException ignored) {}
       return;
-    }
-
-    factories.add(dateAdapterFactory);
-    if (sqlTypesSupported) {
-      factories.add(sqlTimestampAdapterFactory);
-      factories.add(sqlDateAdapterFactory);
     }
   }
 }
