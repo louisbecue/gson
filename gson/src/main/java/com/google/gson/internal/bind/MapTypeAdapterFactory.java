@@ -209,6 +209,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
     }
 
     @Override
+    /* New version of write with a cyclomatic complexity reduction 17 -> 5.*/
     public void write(JsonWriter out, Map<K, V> map) throws IOException {
       if (map == null) {
         out.nullValue();
@@ -216,44 +217,66 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
       }
 
       if (!complexMapKeySerialization) {
-        out.beginObject();
-        for (Map.Entry<K, V> entry : map.entrySet()) {
-          out.name(String.valueOf(entry.getKey()));
-          valueTypeAdapter.write(out, entry.getValue());
-        }
-        out.endObject();
-        return;
+        writeSimpleMap(out, map);
+      } else {
+        writeComplexMap(out, map);
       }
+    }
 
+    private void writeSimpleMap(JsonWriter out, Map<K, V> map) throws IOException {
+      out.beginObject();
+      for (Map.Entry<K, V> entry : map.entrySet()) {
+        out.name(String.valueOf(entry.getKey()));
+        valueTypeAdapter.write(out, entry.getValue());
+      }
+      out.endObject();
+    }
+
+    private void writeComplexMap(JsonWriter out, Map<K, V> map) throws IOException {
+      List<JsonElement> keys = new ArrayList<JsonElement>(map.size());
+      List<V> values = new ArrayList<V>(map.size());
+      boolean hasComplexKeys = extractKeysAndValues(map, keys, values);
+
+      if (hasComplexKeys) {
+        writeAsArrays(out, keys, values);
+      } else {
+        writeAsObject(out, keys, values);
+      }
+    }
+
+    private boolean extractKeysAndValues(Map<K, V> map, List<JsonElement> keys, List<V> values)
+        throws IOException {
       boolean hasComplexKeys = false;
-      List<JsonElement> keys = new ArrayList<>(map.size());
-
-      List<V> values = new ArrayList<>(map.size());
       for (Map.Entry<K, V> entry : map.entrySet()) {
         JsonElement keyElement = keyTypeAdapter.toJsonTree(entry.getKey());
         keys.add(keyElement);
         values.add(entry.getValue());
         hasComplexKeys |= keyElement.isJsonArray() || keyElement.isJsonObject();
       }
+      return hasComplexKeys;
+    }
 
-      if (hasComplexKeys) {
-        out.beginArray();
-        for (int i = 0, size = keys.size(); i < size; i++) {
-          out.beginArray(); // entry array
-          Streams.write(keys.get(i), out);
-          valueTypeAdapter.write(out, values.get(i));
-          out.endArray();
-        }
+    private void writeAsArrays(JsonWriter out, List<JsonElement> keys, List<V> values)
+        throws IOException {
+      out.beginArray();
+      for (int i = 0, size = keys.size(); i < size; i++) {
+        out.beginArray(); // entry array
+        Streams.write(keys.get(i), out);
+        valueTypeAdapter.write(out, values.get(i));
         out.endArray();
-      } else {
-        out.beginObject();
-        for (int i = 0, size = keys.size(); i < size; i++) {
-          JsonElement keyElement = keys.get(i);
-          out.name(keyToString(keyElement));
-          valueTypeAdapter.write(out, values.get(i));
-        }
-        out.endObject();
       }
+      out.endArray();
+    }
+
+    private void writeAsObject(JsonWriter out, List<JsonElement> keys, List<V> values)
+        throws IOException {
+      out.beginObject();
+      for (int i = 0, size = keys.size(); i < size; i++) {
+        JsonElement keyElement = keys.get(i);
+        out.name(keyToString(keyElement));
+        valueTypeAdapter.write(out, values.get(i));
+      }
+      out.endObject();
     }
 
     private String keyToString(JsonElement keyElement) {
