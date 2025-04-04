@@ -288,9 +288,7 @@ public final class GsonTypes {
     }
     checkArgument(supertype.isAssignableFrom(contextRawType));
     return resolve(
-        context,
-        contextRawType,
-        GsonTypes.getGenericSupertype(context, contextRawType, supertype));
+        context, contextRawType, GsonTypes.getGenericSupertype(context, contextRawType, supertype));
   }
 
   /**

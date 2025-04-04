@@ -50,8 +50,7 @@ public final class GsonTypesTest {
     assertThat(e).hasMessageThat().isEqualTo("Must specify owner type for " + NonStaticInner.class);
 
     type =
-        GsonTypes.newParameterizedTypeWithOwner(
-            GsonTypesTest.class, NonStaticInner.class, A.class);
+        GsonTypes.newParameterizedTypeWithOwner(GsonTypesTest.class, NonStaticInner.class, A.class);
     assertThat(type.getOwnerType()).isEqualTo(GsonTypesTest.class);
     assertThat(type.getRawType()).isEqualTo(NonStaticInner.class);
     assertThat(type.getActualTypeArguments()).asList().containsExactly(A.class);
@@ -141,8 +140,7 @@ public final class GsonTypesTest {
       private static final long serialVersionUID = 4112578634029874840L;
     }
 
-    Type[] types =
-        GsonTypes.getMapKeyAndValueTypes(CustomProperties.class, CustomProperties.class);
+    Type[] types = GsonTypes.getMapKeyAndValueTypes(CustomProperties.class, CustomProperties.class);
 
     assertThat(types[0]).isEqualTo(String.class);
     assertThat(types[1]).isEqualTo(String.class);

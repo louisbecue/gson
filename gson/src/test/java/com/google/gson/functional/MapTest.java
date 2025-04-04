@@ -320,8 +320,7 @@ public class MapTest {
 
   @Test
   public void testCustomSerializerForSpecificMapType() {
-    Type type =
-        GsonTypes.newParameterizedTypeWithOwner(null, Map.class, String.class, Long.class);
+    Type type = GsonTypes.newParameterizedTypeWithOwner(null, Map.class, String.class, Long.class);
     Gson gson =
         new GsonBuilder()
             .registerTypeAdapter(
