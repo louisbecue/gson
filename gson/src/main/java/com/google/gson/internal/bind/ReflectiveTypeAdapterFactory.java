@@ -214,16 +214,20 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
       writeTypeAdapter = typeAdapter;
     }
     return new BoundField(serializedName, field) {
+
+      // add a local method extracted to verify the accessibility
+      private void ensureFieldAccessibility(Object source) {
+        if (accessor == null) {
+          checkAccessible(source, field);
+        } else {
+          checkAccessible(source, accessor);
+        }
+      }
+
       @Override
       void write(JsonWriter writer, Object source) throws IOException, IllegalAccessException {
         if (blockInaccessible) {
-          if (accessor == null) {
-            checkAccessible(source, field);
-          } else {
-            // Note: This check might actually be redundant because access check for canonical
-            // constructor should have failed already
-            checkAccessible(source, accessor);
-          }
+          ensureFieldAccessibility(source);
         }
 
         Object fieldValue;
