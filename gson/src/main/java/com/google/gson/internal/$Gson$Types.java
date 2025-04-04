@@ -461,14 +461,14 @@ public final class $Gson$Types {
 
     Type declaredBy = getGenericSupertype(context, contextRawType, declaredByRaw);
     if (declaredBy instanceof ParameterizedType) {
-      int index = indexOf(declaredByRaw.getTypeParameters(), unknown);
+      int index = findIndexOf(declaredByRaw.getTypeParameters(), unknown);
       return ((ParameterizedType) declaredBy).getActualTypeArguments()[index];
     }
 
     return unknown;
   }
 
-  private static int indexOf(Object[] array, Object toFind) {
+  private static int findIndexOf(Object[] array, Object toFind) {
     for (int i = 0, length = array.length; i < length; i++) {
       if (toFind.equals(array[i])) {
         return i;
