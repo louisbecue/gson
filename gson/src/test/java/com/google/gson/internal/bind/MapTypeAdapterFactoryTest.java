@@ -29,7 +29,8 @@ import org.junit.Test;
 public class MapTypeAdapterFactoryTest {
 
   private Gson createGsonWithComplexMapSerialization() {
-    ConstructorConstructor constructorConstructor = new ConstructorConstructor(Collections.emptyMap(), true, Collections.emptyList());
+    ConstructorConstructor constructorConstructor =
+        new ConstructorConstructor(Collections.emptyMap(), true, Collections.emptyList());
     MapTypeAdapterFactory factory = new MapTypeAdapterFactory(constructorConstructor, true);
     return new GsonBuilder().registerTypeAdapterFactory(factory).create();
   }
