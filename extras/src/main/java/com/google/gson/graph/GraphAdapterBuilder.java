@@ -38,8 +38,13 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Queue;
 
-/** Writes a graph of objects as a list of named nodes. */
-// TODO: proper documentation
+/**
+ * This class helps to save and load objects that are connected in circles.
+ * You can tell the class which types of objects to expect.
+ * When saving, each object gets a unique ID.
+ * If the same object appears again, only its ID is saved.
+ * This stops the program from getting stuck in a loop and keeps the objects the same when loading.
+ */
 public final class GraphAdapterBuilder {
   private final Map<Type, InstanceCreator<?>> instanceCreators;
   private final ConstructorConstructor constructorConstructor;
