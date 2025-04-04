@@ -90,7 +90,7 @@ Pour consulter l'historique complet des commits du projet dans le temps, il faut
 
 - **Ajout d'une interface `DateFormattingStrategy`**
 
-  - **Lien du commit** : [4872f80b6d4ca897e87df55250fdd03a8d684645](https://github.com/google/gson/commit/4872f80b6d4ca897e87df55250fdd03a8d684645)
+  - **Lien du commit** : [84596a9461b48e50ed8c0fd02c6dcd6bea29c5a2](https://github.com/google/gson/commit/84596a9461b48e50ed8c0fd02c6dcd6bea29c5a2)
 
   - **Fichier concerné** :
     - **gson/src/main/java/com/google/gson/DateTypeAdapter.java**
@@ -133,3 +133,10 @@ Pour consulter l'historique complet des commits du projet dans le temps, il faut
     - **gson/src/main/java/com/google/gson/GsonBuilder.java**
 
   - **Description** : Ajout de nouvelles méthodes dans `GsonBuilder` pour ajouter le nouveaux pattern strategy de formatage de dates.
+
+- **Résultat** : Malheureusement, cette modification ne compile pas. Les messages d'erreur ne sont pas suffisamment précis pour identifier la cause exacte du problème.
+
+```bash
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project gson: Compilation failure
+[ERROR] warnings found and -Werror specified
+```
