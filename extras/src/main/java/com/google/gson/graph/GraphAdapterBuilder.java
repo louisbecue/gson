@@ -39,11 +39,10 @@ import java.util.Map;
 import java.util.Queue;
 
 /**
- * This class helps to save and load objects that are connected in circles.
- * You can tell the class which types of objects to expect.
- * When saving, each object gets a unique ID.
- * If the same object appears again, only its ID is saved.
- * This stops the program from getting stuck in a loop and keeps the objects the same when loading.
+ * This class helps to save and load objects that are connected in circles. You can tell the class
+ * which types of objects to expect. When saving, each object gets a unique ID. If the same object
+ * appears again, only its ID is saved. This stops the program from getting stuck in a loop and
+ * keeps the objects the same when loading.
  */
 public final class GraphAdapterBuilder {
   private final Map<Type, InstanceCreator<?>> instanceCreators;
