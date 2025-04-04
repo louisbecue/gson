@@ -32,7 +32,7 @@ Pour consulter l'historique complet des commits du projet dans le temps, il faut
   - **gson/src/main/java/com/google/gson/internal/$Gson$Types.java**
   - **gson/src/main/java/com/google/gson/internal/$Gson$Preconditions.java**
 
-- **Description** : L'issue ([Issue #1744](https://github.com/google/gson/issues/1744)) traite ce probléme. Cela permet d'empêcher l'importation automatique dans l'IDE. Cependant, les IDE actuels (du moins Eclipse) permettent d'empêcher l'apparition de certains types ou packages dans les suggestions d'importation. Donc ce nomage n'est plus indispensable.
+- **Description** : L'issue ([Issue #1744](https://github.com/google/gson/issues/1744)) traite ce probléme. Cela permet d'empêcher l'importation automatique dans l'IDE. Cependant, les IDE actuels permettent d'empêcher l'apparition de certains types ou packages dans les suggestions d'importation. Donc ce nomage n'est plus indispensable.
 
 ### Ajout de documentarion à la place de TODO
 
