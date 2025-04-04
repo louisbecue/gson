@@ -9,14 +9,14 @@ Pour consulter l'historique complet des commits du projet dans le temps, il faut
 
 ## Petites Modifications
 
-### Renommage de la méthode `indefOf` en `findIndexOf`
+### Renommage de la méthode `indexOf` en `findIndexOf`
 
 - **Lien du commit** : [03d76b37edad0484f4e8e669654c5fdf6da327f4](https://github.com/google/gson/commit/03d76b37edad0484f4e8e669654c5fdf6da327f4)
 
 - **Fichier concerné** :
   - **test-shrinker/src/main/java/com/example/TestExecutor.java**
 
-- **Description** : Renommage de la méthode `indefOf` en `findIndexOf` pour améliorer sa clarté et rendre son objectif plus explicite.  
+- **Description** : Renommage de la méthode `indexOf` en `findIndexOf` pour améliorer sa clarté et rendre son objectif plus explicite.  
 
 ### Ajout d'une constante `UNREACHABLE_ERROR`
 
