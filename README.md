@@ -14,13 +14,16 @@ Pour consulter l'historique complet des commits du projet dans le temps, il faut
 - **Lien du commit** : [03d76b37edad0484f4e8e669654c5fdf6da327f4](https://github.com/google/gson/commit/03d76b37edad0484f4e8e669654c5fdf6da327f4)
 
 - **Fichier concerné** :
-  - **test-shrinker/src/main/java/com/example/TestExecutor.java**
+  - **gson/src/main/java/com/google/gson/internal/$Gson$Types.java**
 
 - **Description** : Renommage de la méthode `indexOf` en `findIndexOf` pour améliorer sa clarté et rendre son objectif plus explicite.  
 
 ### Ajout d'une constante `UNREACHABLE_ERROR`
 
 - **Lien du commit** : [1044696c162020ed96a8850cb0a1217860febc3d](https://github.com/google/gson/commit/1044696c162020ed96a8850cb0a1217860febc3d)
+
+- **Fichier concerné** :
+  - **test-shrinker/src/main/java/com/example/TestExecutor.java**
 
 - **Description** : Introduction d'une constante `UNREACHABLE_ERROR` pour permettre une gestion centralisée du texte, évitant ainsi de modifier directement le code.  
 
@@ -40,7 +43,8 @@ Pour consulter l'historique complet des commits du projet dans le temps, il faut
 
 - **Fichier concerné** :
   - **extras/src/main/java/com/google/gson/graph/GraphAdapterBuilder.java**
-  - **Description** : Ajout de documentation pour la classe `GraphAdapterBuilder`. Cette modification remplace un commentaire **TODO: proper documentation** par une documentation.
+
+- **Description** : Ajout de documentation pour la classe `GraphAdapterBuilder`. Cette modification remplace un commentaire **TODO: proper documentation** par une documentation.
 
 ## Moyennes Modifications
 
