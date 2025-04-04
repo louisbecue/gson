@@ -6,8 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-import com.google.gson.TypeAdapter;
-import com.google.gson.TypeAdapterFactory;
 
 /** Date formatting strategy based on a date pattern. */
 public class PatternBasedDateStrategy implements DateFormattingStrategy {

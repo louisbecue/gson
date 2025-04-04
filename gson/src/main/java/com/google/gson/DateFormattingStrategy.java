@@ -3,9 +3,7 @@ package com.google.gson;
 import java.text.ParseException;
 import java.util.Date;
 
-/**
- * A simple way to format dates in Gson.
- */
+/** A simple way to format dates in Gson. */
 public interface DateFormattingStrategy {
   /**
    * Convert a date to text.

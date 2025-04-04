@@ -5,8 +5,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
-import com.google.gson.TypeAdapter;
-import com.google.gson.TypeAdapterFactory;
 
 /** A strategy for formatting dates using specific styles for date and time. */
 public class StyleBasedDateStrategy implements DateFormattingStrategy {

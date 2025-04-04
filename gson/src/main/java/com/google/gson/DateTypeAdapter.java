@@ -7,10 +7,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 
-/** 
- * This is a simple adapter for Date.
- * It uses a formatting strategy to change the date.
- */
+/** This is a simple adapter for Date. It uses a formatting strategy to change the date. */
 public class DateTypeAdapter extends TypeAdapter<Date> {
   public static final Class<? extends Date> DEFAULT = Date.class;
   public static final Class<? extends Date> SQL_DATE = java.sql.Date.class;

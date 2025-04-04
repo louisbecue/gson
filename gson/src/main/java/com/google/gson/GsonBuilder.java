@@ -921,14 +921,20 @@ public final class GsonBuilder {
         new ArrayList<>(reflectionFilters));
   }
 
-  private static void addTypeAdaptersForDate(DateFormattingStrategy strategy, List<TypeAdapterFactory> factories) {
+  private static void addTypeAdaptersForDate(String datePattern,int dateStyle,int timeStyle,DateFormattingStrategy strategy, List<TypeAdapterFactory> factories) {
+    addTypeAdaptersForDate(strategy, factories);
+  }
+
+  private static void addTypeAdaptersForDate(
+      DateFormattingStrategy strategy, List<TypeAdapterFactory> factories) {
     if (strategy != null) {
       factories.add(strategy.createAdapterFactory(DateTypeAdapter.DEFAULT));
       try {
         Class.forName("java.sql.Date");
         factories.add(strategy.createAdapterFactory(DateTypeAdapter.SQL_TIMESTAMP));
         factories.add(strategy.createAdapterFactory(DateTypeAdapter.SQL_DATE));
-      } catch (ClassNotFoundException ignored) {}
+      } catch (ClassNotFoundException ignored) {
+      }
       return;
     }
   }
