@@ -1,123 +1,135 @@
-# Gson
+# Projet GL - Partie 2 : Amélioration du projet
+> **Louis Becue**
 
-Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object.
-Gson can work with arbitrary Java objects including pre-existing objects that you do not have source-code of.
+## Notes
 
-There are a few open-source projects that can convert Java objects to JSON. However, most of them require that you place Java annotations in your classes; something that you can not do if you do not have access to the source-code. Most also do not fully support the use of Java Generics. Gson considers both of these as very important design goals.
+J'ai initialement commencé le projet sur GitLab. Cependant, en raison de problèmes de compilation, j'ai décidé de faire un fork d'un projet qui ne présentait pas ces problèmes.  
 
-> [!NOTE]\
-> Gson is currently in maintenance mode; existing bugs will be fixed, but large new features will likely not be added. If you want to add a new feature, please first search for existing GitHub issues, or create a new one to discuss the feature and get feedback.
+Pour consulter l'historique complet des commits du projet dans le temps, il faut aller sur le dépôt GitLab : [lien du projet](https://gitlab-etu.fil.univ-lille.fr/louis.becue.etu/gl-gson).
 
-> [!IMPORTANT]\
-> Gson's main focus is on Java. Using it with other JVM languages such as Kotlin or Scala might work fine in many cases, but language-specific features such as Kotlin's non-`null` types or constructors with default arguments are not supported. This can lead to confusing and incorrect behavior.\
-> When using languages other than Java, prefer a JSON library with explicit support for that language.
+## Petites Modifications
 
-### Goals
-  * Provide simple `toJson()` and `fromJson()` methods to convert Java objects to JSON and vice-versa
-  * Allow pre-existing unmodifiable objects to be converted to and from JSON
-  * Extensive support of Java Generics
-  * Allow custom representations for objects
-  * Support arbitrarily complex objects (with deep inheritance hierarchies and extensive use of generic types)
+### Renommage de la méthode `indefOf` en `findIndexOf`
 
-### Download
+- **Lien du commit** : [03d76b37edad0484f4e8e669654c5fdf6da327f4](https://github.com/google/gson/commit/03d76b37edad0484f4e8e669654c5fdf6da327f4)
 
-Gradle:
-```gradle
-dependencies {
-  implementation 'com.google.code.gson:gson:2.12.0'
-}
-```
+- **Fichier concerné** :
+  - **test-shrinker/src/main/java/com/example/TestExecutor.java**
 
-Maven:
-```xml
-<dependency>
-  <groupId>com.google.code.gson</groupId>
-  <artifactId>gson</artifactId>
-  <version>2.12.0</version>
-</dependency>
-```
+- **Description** : Renommage de la méthode `indefOf` en `findIndexOf` pour améliorer sa clarté et rendre son objectif plus explicite.  
 
-[Gson jar downloads](https://maven-badges.herokuapp.com/maven-central/com.google.code.gson/gson) are available from Maven Central.
+### Ajout d'une constante `UNREACHABLE_ERROR`
 
-![Build Status](https://github.com/google/gson/actions/workflows/build.yml/badge.svg)
+- **Lien du commit** : [1044696c162020ed96a8850cb0a1217860febc3d](https://github.com/google/gson/commit/1044696c162020ed96a8850cb0a1217860febc3d)
 
-### Requirements
-#### Minimum Java version
-- Gson 2.12.0 and newer: Java 8
-- Gson 2.9.0 to 2.11.0: Java 7
-- Gson 2.8.9 and older: Java 6
+- **Description** : Introduction d'une constante `UNREACHABLE_ERROR` pour permettre une gestion centralisée du texte, évitant ainsi de modifier directement le code.  
 
-Despite supporting older Java versions, Gson also provides a JPMS module descriptor (module name `com.google.gson`) for users of Java 9 or newer.
+### Renommage des classes contenant le symbole `$`
 
-#### JPMS dependencies (Java 9+)
-These are the optional Java Platform Module System (JPMS) JDK modules which Gson depends on.
-This only applies when running Java 9 or newer.
+- **Lien du commit** : [266da71093b677185710abb7f39c40ffc5e80e2d](https://github.com/google/gson/commit/266da71093b677185710abb7f39c40ffc5e80e2d)
 
-- `java.sql` (optional since Gson 2.8.9)\
-When this module is present, Gson provides default adapters for some SQL date and time classes.
+- **Fichiers concernés** :
+  - **gson/src/main/java/com/google/gson/internal/$Gson$Types.java**
+  - **gson/src/main/java/com/google/gson/internal/$Gson$Preconditions.java**
 
-- `jdk.unsupported`, respectively class `sun.misc.Unsafe` (optional)\
-When this module is present, Gson can use the `Unsafe` class to create instances of classes without no-args constructor.
-However, care should be taken when relying on this. `Unsafe` is not available in all environments and its usage has some pitfalls,
-see [`GsonBuilder.disableJdkUnsafe()`](https://javadoc.io/doc/com.google.code.gson/gson/latest/com.google.gson/com/google/gson/GsonBuilder.html#disableJdkUnsafe()).
+- **Description** : L'issue ([Issue #1744](https://github.com/google/gson/issues/1744)) traite ce probléme. Cela permet d'empêcher l'importation automatique dans l'IDE. Cependant, les IDE actuels (du moins Eclipse) permettent d'empêcher l'apparition de certains types ou packages dans les suggestions d'importation. Donc ce nomage n'est plus indispensable.
 
-#### Minimum Android API level
+### Ajout de documentarion à la place de TODO
 
-- Gson 2.11.0 and newer: API level 21
-- Gson 2.10.1 and older: API level 19
+- **Lien du commit** : [2a0f2da010cf6d5e96bd2eda3bb73c94ee210573](https://github.com/google/gson/commit/2a0f2da010cf6d5e96bd2eda3bb73c94ee210573)
 
-Older Gson versions may also support lower API levels, however this has not been verified.
+- **Fichier concerné** :
+  - **extras/src/main/java/com/google/gson/graph/GraphAdapterBuilder.java**
+  - **Description** : Ajout de documentation pour la classe `GraphAdapterBuilder`. Cette modification remplace un commentaire **TODO: proper documentation** par une documentation.
 
-### Documentation
-  * [API Javadoc](https://www.javadoc.io/doc/com.google.code.gson/gson): Documentation for the current release
-  * [User guide](UserGuide.md): This guide contains examples on how to use Gson in your code
-  * [Troubleshooting guide](Troubleshooting.md): Describes how to solve common issues when using Gson
-  * [Releases and change log](https://github.com/google/gson/releases): Latest releases and changes in these versions; for older releases see [`CHANGELOG.md`](CHANGELOG.md)
-  * [Design document](GsonDesignDocument.md): This document discusses issues we faced while designing Gson. It also includes a comparison of Gson with other Java libraries that can be used for Json conversion
+## Moyennes Modifications
 
-Please use the ['gson' tag on StackOverflow](https://stackoverflow.com/questions/tagged/gson), [GitHub Discussions](https://github.com/google/gson/discussions) or the [google-gson Google group](https://groups.google.com/group/google-gson) to discuss Gson or to post questions.
+### Ajout d'une méthode local dans le méthode `write()` de la classe `ReflectiveTypeAdapterFactory`
 
-### Related Content Created by Third Parties
-  * [Gson Tutorial](https://www.studytrails.com/java/json/java-google-json-introduction/) by `StudyTrails`
-  * [Gson Tutorial Series](https://futurestud.io/tutorials/gson-getting-started-with-java-json-serialization-deserialization) by `Future Studio`
-  * [Gson API Report](https://abi-laboratory.pro/java/tracker/timeline/gson/)
+- **Lien du commit** : [3c6990ef1cf118242238cb212f1804647b52fdbf](https://github.com/google/gson/commit/3c6990ef1cf118242238cb212f1804647b52fdbf)
 
-### Building
+- **Fichier concerné** :
+  - **gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java**
 
-Gson uses Maven to build the project:
-```
-mvn clean verify
-```
+- **Description** : Ajout d'une méthode pour extraire et vérifier l'accésibilté d'un objet et donc réduire la compléxité cyclomatique.
 
-JDK 11 or newer is required for building, JDK 17 or 21 is recommended. Newer JDKs are currently not supported for building (but are supported when _using_ Gson).
+- **Résultat** : La compléxité cyclomatique est passé de `11` à `9`.
 
-### Contributing
+### Réduction la complexité cyclomatique de la méthode `write()` de la classe `MapTypeAdapterFactory`
 
-See the [contributing guide](https://github.com/google/.github/blob/master/CONTRIBUTING.md).\
-Please perform a quick search to check if there are already existing issues or pull requests related to your contribution.
+- **Lien du commit** : [6994059dd30a5d93ee2a3307292c07fd0eb8c710](https://github.com/google/gson/commit/6994059dd30a5d93ee2a3307292c07fd0eb8c710)
 
-Keep in mind that Gson is in maintenance mode. If you want to add a new feature, please first search for existing GitHub issues, or create a new one to discuss the feature and get feedback.
+- **Fichier concerné** :
+  - **gson/src/main/java/com/google/gson/internal/bind/MapTypeAdapterFactory.java**
 
-### License
+- **Description** : Une nouvelle version de la méthode `write()` en décomposant la logique en plusieurs méthodes privées, notamment `writeSimpleMap`, `writeComplexMap`, `extractKeysAndValues`, `writeAsArrays`, et `writeAsObject`. Ces méthodes permettent de mieux structurer le code et de le rendre plus lisible et maintenable.  
 
-Gson is released under the [Apache 2.0 license](LICENSE).
+- **Résultat** : La compléxité cyclomatique est passé de `17` à `5`.
 
-```
-Copyright 2008 Google Inc.
+### Ajout de tests pour la méthode `write()` de la classe `MapTypeAdapterFactory`
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+- **Lien du commit** : [d70574e2514cc3545ad8acbe635c86390a6e10c1](https://github.com/google/gson/commit/d70574e2514cc3545ad8acbe635c86390a6e10c1)
 
-    http://www.apache.org/licenses/LICENSE-2.0
+- **Fichier concerné** :
+  - **gson/src/test/java/com/google/gson/internal/bind/MapTypeAdapterFactoryTest.java**
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+- **Description** : Ajout de méthodes de test pour la fonction modifiée précédemment, afin de valider son comportement et garantir son bon fonctionnement.
 
-### Disclaimer
+- **Résultat** : Les tests passent.
 
-This is not an officially supported Google product.
+## Grande Modification
+
+### Ajout d'un dessign pattern strategy pour le traitement des dates
+
+- **Description** : Ajout d'un pattern strategy car le code actuel utilise des conditions complexes pour le traitement des dates.
+
+- **Fichier concerné** :
+  - **gson/src/test/java/com/google/gson/internal/bind/MapTypeAdapterFactoryTest.java**
+
+#### Les étapes
+
+- **Ajout d'une interface `DateFormattingStrategy`**
+
+  - **Lien du commit** : [4872f80b6d4ca897e87df55250fdd03a8d684645](https://github.com/google/gson/commit/4872f80b6d4ca897e87df55250fdd03a8d684645)
+
+  - **Fichier concerné** :
+    - **gson/src/main/java/com/google/gson/DateTypeAdapter.java**
+
+  - **Description** : Création d'une interface `DateFormattingStrategy`
+  pour les différentes stratégies de formatage de dates.
+
+- **Ajout de la stratégie basée sur un pattern**
+
+  - **Lien du commit** : [4b258ebfcaf0e51008de7c2e69705d3af4060c8c](https://github.com/google/gson/commit/4b258ebfcaf0e51008de7c2e69705d3af4060c8c)
+
+  - **Fichier concerné** :
+    - **gson/src/main/java/com/google/gson/PatternBasedDateStrategy.java**
+
+  - **Description** : Implémentation d'une stratégie de formatage de dates basée sur des patterns (par exemple, `yyyy-MM-dd`). Cette stratégie utilise des objets `SimpleDateFormat` pour gérer les conversions entre chaînes de caractères et objets `Date`.
+
+- **Ajout de la stratégie basée sur les types SQL**
+
+  - **Lien du commit** : [a45be25fcfec1725f5bd6f0eae62bb2a21fe5bb0](https://github.com/google/gson/commit/a45be25fcfec1725f5bd6f0eae62bb2a21fe5bb0)
+
+  - **Fichier concerné** :
+    - **gson/src/main/java/com/google/gson/SqlDateStrategy.java**
+
+  - **Description** : Création d'une stratégie spécifique pour le formatage des dates SQL (`java.sql.Date`). Cette stratégie permet de gérer les particularités des types SQL tout en respectant l'interface `DateFormattingStrategy`.
+
+- **Création des `TypeAdapter` utilisant les stratégies**
+
+  - **Lien du commit** : [4872f80b6d4ca897e87df55250fdd03a8d684645](https://github.com/google/gson/commit/4872f80b6d4ca897e87df55250fdd03a8d684645)
+
+  - **Fichier concerné** :
+    - **gson/src/main/java/com/google/gson/DateTypeAdapter.java**
+
+  - **Description** : Mise à jour de la classe `DateTypeAdapter` pour intégrer les différentes stratégies de formatage de dates. Cela permet de choisir dynamiquement la stratégie appropriée.
+
+- **Modification de `GsonBuilder` pour intégrer les stratégies**
+
+  - **Lien du commit** : [6af6fd219ba00f458b495c4ddf5c85ca83f1e130](https://github.com/google/gson/commit/6af6fd219ba00f458b495c4ddf5c85ca83f1e130)
+
+  - **Fichier concerné** :
+    - **gson/src/main/java/com/google/gson/GsonBuilder.java**
+
+  - **Description** : Ajout de nouvelles méthodes dans `GsonBuilder` pour ajouter le nouveaux pattern strategy de formatage de dates.
