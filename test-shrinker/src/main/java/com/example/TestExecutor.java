@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 public class TestExecutor {
   private TestExecutor() {}
+  private static final String UNREACHABLE_ERROR = "unreachable";
 
   /**
    * Helper method for running individual tests. In case of an exception wraps it and includes the
@@ -31,6 +32,6 @@ public class TestExecutor {
     // prevent the code shrinkers from simplifying this
     return Optional.of(t)
         .map(v -> Optional.of(v).get())
-        .orElseThrow(() -> new AssertionError("unreachable"));
+        .orElseThrow(() -> new AssertionError(UNREACHABLE_ERROR));
   }
 }
